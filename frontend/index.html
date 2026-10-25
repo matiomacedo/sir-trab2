@@ -7,90 +7,64 @@
   <link rel="stylesheet" href="./css/styles.css" />
 </head>
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <h1>Gestão de Alunos</h1>
-    </div>
-  </header>
-
   <main class="container">
-    <section class="toolbar" aria-label="Filtros e ações">
-      <div class="filters">
-        <label class="field">
-          <span>Curso</span>
-          <select id="filter-curso">
-            <option value="">Todos os cursos</option>
+    <h1>Gestão de Alunos</h1>
+
+    <form id="aluno-form" class="card">
+      <h2 id="form-title">Novo aluno</h2>
+      <div class="fields">
+        <label>
+          Nome
+          <input id="nome" type="text" required minlength="2" maxlength="60" autocomplete="given-name" />
+        </label>
+        <label>
+          Apelido
+          <input id="apelido" type="text" required minlength="2" maxlength="60" autocomplete="family-name" />
+        </label>
+        <label>
+          Curso
+          <select id="curso" required>
+            <option value="">Selecionar…</option>
           </select>
         </label>
-        <button type="button" id="btn-refresh" class="btn btn-secondary">Atualizar</button>
-      </div>
-      <div class="actions">
-        <button type="button" id="btn-new" class="btn btn-primary">+ Novo aluno</button>
-      </div>
-    </section>
-
-    <p class="result-count" id="result-count" aria-live="polite"></p>
-
-    <section aria-label="Lista de alunos">
-      <div id="state-loading" class="state" hidden>A carregar alunos…</div>
-      <div id="state-error" class="state state-error" hidden></div>
-      <div id="state-empty" class="state" hidden>Nenhum aluno encontrado.</div>
-
-      <div class="table-wrapper" id="table-wrapper" hidden>
-        <table class="alunos-table">
-          <thead>
-            <tr>
-              <th scope="col">Nome</th>
-              <th scope="col">Apelido</th>
-              <th scope="col">Curso</th>
-              <th scope="col">Ano</th>
-              <th scope="col">Idade</th>
-              <th scope="col"><span class="sr-only">Ações</span></th>
-            </tr>
-          </thead>
-          <tbody id="alunos-tbody"></tbody>
-        </table>
-      </div>
-    </section>
-  </main>
-
-  <dialog id="aluno-dialog" aria-labelledby="dialog-title">
-    <form method="dialog" id="aluno-form" novalidate>
-      <h2 id="dialog-title">Novo aluno</h2>
-      <p class="form-error" id="aluno-form-error" hidden></p>
-      <div class="form-grid">
-        <label class="field">
-          <span>Nome *</span>
-          <input type="text" id="aluno-nome" minlength="2" maxlength="60" required autocomplete="given-name" />
-        </label>
-        <label class="field">
-          <span>Apelido *</span>
-          <input type="text" id="aluno-apelido" minlength="2" maxlength="60" required autocomplete="family-name" />
-        </label>
-        <label class="field">
-          <span>Curso *</span>
-          <select id="aluno-curso" required></select>
-        </label>
-        <label class="field">
-          <span>Ano curricular *</span>
-          <select id="aluno-ano" required>
+        <label>
+          Ano curricular
+          <select id="ano" required>
             <option value="">Selecionar…</option>
             <option value="1">1.º ano</option>
             <option value="2">2.º ano</option>
             <option value="3">3.º ano</option>
           </select>
         </label>
-        <label class="field">
-          <span>Idade</span>
-          <input type="number" id="aluno-idade" min="0" max="120" inputmode="numeric" />
+        <label>
+          Idade
+          <input id="idade" type="number" min="0" max="120" />
         </label>
       </div>
-      <div class="dialog-actions">
-        <button type="button" id="btn-cancel" class="btn btn-secondary">Cancelar</button>
-        <button type="submit" id="btn-save" class="btn btn-primary">Guardar</button>
+      <div class="actions">
+        <button type="submit" id="guardar">Adicionar</button>
+        <button type="button" id="cancelar" hidden>Cancelar</button>
       </div>
     </form>
-  </dialog>
+
+    <p id="mensagem" role="alert" hidden></p>
+
+    <div class="card table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Nome</th>
+            <th scope="col">Apelido</th>
+            <th scope="col">Curso</th>
+            <th scope="col">Ano</th>
+            <th scope="col">Idade</th>
+            <th scope="col">Ações</th>
+          </tr>
+        </thead>
+        <tbody id="alunos"></tbody>
+      </table>
+    </div>
+  </main>
 
   <script src="./js/app.js"></script>
 </body>
