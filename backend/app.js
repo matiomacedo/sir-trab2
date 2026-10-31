@@ -1,6 +1,7 @@
 require('dotenv').config();
 const path = require('node:path');
 const express = require('express');
+const cors = require('cors');
 const connectDB = require('./db');
 const alunoRoutes = require('./routes/alunoRoutes');
 const cursoRoutes = require('./routes/cursoRoutes');
@@ -8,6 +9,7 @@ const cursoRoutes = require('./routes/cursoRoutes');
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.use(cors());
 app.use(express.json());
 app.use('/alunos', alunoRoutes);
 app.use('/cursos', cursoRoutes);

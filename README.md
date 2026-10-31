@@ -84,3 +84,29 @@ A API e o frontend ficam disponíveis em <http://localhost:3000>.
 ## Coleção Postman
 
 A coleção da Parte 2 está em `mock-server/tests/Collection.postman_collection.json`.
+
+## Deploy
+
+### API no Render
+
+1. Criar um Web Service ligado a este repositório.
+2. Root Directory: `backend`.
+3. Build Command: `npm install`.
+4. Start Command: `npm start`.
+5. Adicionar a variável de ambiente `MONGODB_URI` com a connection string do Atlas.
+6. Não definir `PORT`; o Render fornece essa variável.
+
+### Frontend no Vercel
+
+1. Importar este repositório no Vercel.
+2. Root Directory: `frontend`.
+3. Framework Preset: Other.
+4. Build Command: vazio.
+5. Output Directory: `.`.
+
+O endereço da API usado pelo frontend está definido no início de `frontend/js/app.js`. Se o serviço do Render tiver outro nome, atualizar essa constante.
+
+### URLs públicas
+
+- Frontend: `<URL do Vercel>`
+- API: `<URL do Render>`

@@ -1,3 +1,7 @@
+const API = ['localhost', '127.0.0.1'].includes(location.hostname)
+  ? ''
+  : 'https://sir-api.onrender.com';
+
 const form = document.getElementById('aluno-form');
 const formTitle = document.getElementById('form-title');
 const inputNome = document.getElementById('nome');
@@ -17,7 +21,7 @@ let editId = null;
 async function pedir(url, options = {}) {
   const init = { ...options };
   if (init.body) init.headers = { 'Content-Type': 'application/json' };
-  const resposta = await fetch(url, init);
+  const resposta = await fetch(API + url, init);
   if (!resposta.ok) throw new Error('Pedido falhou (HTTP ' + resposta.status + ').');
   return resposta.status === 204 ? null : resposta.json();
 }
