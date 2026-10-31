@@ -64,7 +64,7 @@ O seed limpa as coleções `alunos` e `cursos` e importa os dados de `mock-data/
 npm start
 ```
 
-A API e o frontend ficam disponíveis em <http://localhost:3000>.
+A API fica disponível em <http://localhost:3000>. O frontend local é servido pelo JSON Server; em produção é servido pelo Vercel.
 
 > O JSON Server e a API usam a mesma porta. Executar apenas um de cada vez.
 
@@ -106,9 +106,9 @@ Alternativamente, criar manualmente um Web Service ligado a este repositório.
 4. Build Command: vazio.
 5. Output Directory: `.`.
 
-O endereço da API usado pelo frontend está definido no início de `frontend/js/app.js`. Se o serviço do Render tiver outro nome, atualizar essa constante.
+O endereço da API usado pelo frontend está definido no início de `frontend/js/app.js`.
 
 ### URLs públicas
 
-- Frontend: `<URL do Vercel>`
-- API: `<URL do Render>`
+- Frontend: <https://sir-trab2-frontend.vercel.app>
+- API: <https://sir-api-fn74.onrender.com>

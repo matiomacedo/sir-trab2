@@ -1,5 +1,4 @@
 require('dotenv').config();
-const path = require('node:path');
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./db');
@@ -13,7 +12,6 @@ app.use(cors());
 app.use(express.json());
 app.use('/alunos', alunoRoutes);
 app.use('/cursos', cursoRoutes);
-app.use(express.static(path.join(__dirname, '..', 'frontend')));
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Rota não encontrada.' });

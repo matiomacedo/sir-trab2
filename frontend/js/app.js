@@ -1,6 +1,6 @@
 const API = ['localhost', '127.0.0.1'].includes(location.hostname)
   ? ''
-  : 'https://sir-api.onrender.com';
+  : 'https://sir-api-fn74.onrender.com';
 
 const form = document.getElementById('aluno-form');
 const formTitle = document.getElementById('form-title');
