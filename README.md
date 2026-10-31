@@ -89,7 +89,9 @@ A coleção da Parte 2 está em `mock-server/tests/Collection.postman_collection
 
 ### API no Render
 
-1. Criar um Web Service ligado a este repositório.
+O repositório inclui `render.yaml`, que pode ser usado com Render Blueprints. Nesse caso, indicar `MONGODB_URI` quando for pedido.
+
+Alternativamente, criar manualmente um Web Service ligado a este repositório.
 2. Root Directory: `backend`.
 3. Build Command: `npm install`.
 4. Start Command: `npm start`.
