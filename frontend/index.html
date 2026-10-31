@@ -11,7 +11,7 @@
     <h1>Gestão de Alunos</h1>
 
     <form id="aluno-form" class="card">
-      <h2 id="form-title">Novo aluno</h2>
+      <h2>Novo aluno</h2>
       <div class="fields">
         <label>
           Nome
@@ -42,8 +42,7 @@
         </label>
       </div>
       <div class="actions">
-        <button type="submit" id="guardar">Adicionar</button>
-        <button type="button" id="cancelar" hidden>Cancelar</button>
+        <button type="submit">Adicionar</button>
       </div>
     </form>
 
@@ -65,6 +64,46 @@
       </table>
     </div>
   </main>
+
+  <dialog id="dialogo-edicao" aria-labelledby="titulo-edicao">
+    <form id="form-edicao">
+      <h2 id="titulo-edicao">Editar aluno</h2>
+      <div class="fields">
+        <label>
+          Nome
+          <input id="editar-nome" type="text" required minlength="2" maxlength="60" autocomplete="given-name" />
+        </label>
+        <label>
+          Apelido
+          <input id="editar-apelido" type="text" required minlength="2" maxlength="60" autocomplete="family-name" />
+        </label>
+        <label>
+          Curso
+          <select id="editar-curso" required>
+            <option value="">Selecionar…</option>
+          </select>
+        </label>
+        <label>
+          Ano curricular
+          <select id="editar-ano" required>
+            <option value="">Selecionar…</option>
+            <option value="1">1.º ano</option>
+            <option value="2">2.º ano</option>
+            <option value="3">3.º ano</option>
+          </select>
+        </label>
+        <label>
+          Idade
+          <input id="editar-idade" type="number" min="0" max="120" />
+        </label>
+      </div>
+      <p id="erro-edicao" role="alert" hidden></p>
+      <div class="actions">
+        <button type="submit" id="atualizar">Atualizar</button>
+        <button type="button" id="cancelar-edicao">Cancelar</button>
+      </div>
+    </form>
+  </dialog>
 
   <script src="./js/app.js"></script>
 </body>
