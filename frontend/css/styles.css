@@ -30,6 +30,17 @@ body {
 h1 { font-size: 1.6rem; }
 h2 { font-size: 1.1rem; margin: 0 0 1rem; }
 
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.page-header h1 { margin: 0; }
+
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -42,6 +53,21 @@ h2 { font-size: 1.1rem; margin: 0 0 1rem; }
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 0.75rem;
+}
+
+.toolbar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.toolbar button { justify-self: start; }
+
+.contagem {
+  margin: 0 0 0.75rem;
+  color: var(--muted);
+  font-size: 0.875rem;
 }
 
 label {
@@ -125,6 +151,23 @@ th, td {
 }
 
 th { color: var(--muted); font-weight: 600; }
+th[data-campo] { padding: 0; }
+
+th[data-campo] .sort-button {
+  width: 100%;
+  padding: 0.6rem 0.7rem;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+th[data-campo] .sort-button:hover { background: #f1f5f9; }
+th[aria-sort="ascending"] .sort-button::after { content: " ▲"; }
+th[aria-sort="descending"] .sort-button::after { content: " ▼"; }
 tbody tr:last-child td { border-bottom: none; }
 tbody tr:hover { background: #f1f5f9; }
 td:last-child { white-space: nowrap; }

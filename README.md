@@ -21,7 +21,7 @@ npm start
 
 Abrir <http://localhost:3000>.
 
-O JSON Server serve a pasta `frontend/` e a API ao mesmo tempo. A interface permite listar, adicionar, editar e apagar alunos, usando `fetch` com pedidos assíncronos.
+O JSON Server serve a pasta `frontend/` e a API ao mesmo tempo. A interface permite listar, filtrar, ordenar, adicionar, editar e apagar alunos, usando `fetch` com pedidos assíncronos.
 
 ## Parte 4 — API com Express e MongoDB Atlas
 

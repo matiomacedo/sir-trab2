@@ -8,55 +8,57 @@
 </head>
 <body>
   <main class="container">
-    <h1>Gestão de Alunos</h1>
-
-    <form id="aluno-form" class="card">
-      <h2>Novo aluno</h2>
-      <div class="fields">
-        <label>
-          Nome
-          <input id="nome" type="text" required minlength="2" maxlength="60" autocomplete="given-name" />
-        </label>
-        <label>
-          Apelido
-          <input id="apelido" type="text" required minlength="2" maxlength="60" autocomplete="family-name" />
-        </label>
-        <label>
-          Curso
-          <select id="curso" required>
-            <option value="">Selecionar…</option>
-          </select>
-        </label>
-        <label>
-          Ano curricular
-          <select id="ano" required>
-            <option value="">Selecionar…</option>
-            <option value="1">1.º ano</option>
-            <option value="2">2.º ano</option>
-            <option value="3">3.º ano</option>
-          </select>
-        </label>
-        <label>
-          Idade
-          <input id="idade" type="number" min="0" max="120" />
-        </label>
-      </div>
-      <div class="actions">
-        <button type="submit">Adicionar</button>
-      </div>
-    </form>
+    <header class="page-header">
+      <h1>Gestão de Alunos</h1>
+      <button type="button" id="novo-aluno">Novo aluno</button>
+    </header>
 
     <p id="mensagem" role="alert" hidden></p>
+
+    <div class="card toolbar">
+      <label>
+        Curso
+        <select id="filtro-curso">
+          <option value="">Todos</option>
+        </select>
+      </label>
+      <label>
+        Ano curricular
+        <select id="filtro-ano">
+          <option value="">Todos</option>
+          <option value="1">1.º ano</option>
+          <option value="2">2.º ano</option>
+          <option value="3">3.º ano</option>
+        </select>
+      </label>
+      <label>
+        Pesquisar
+        <input id="filtro-texto" type="search" placeholder="Nome ou apelido" />
+      </label>
+      <button type="button" id="limpar-filtros">Limpar filtros</button>
+    </div>
+
+    <p id="contagem" class="contagem"></p>
 
     <div class="card table-wrap">
       <table>
         <thead>
           <tr>
-            <th scope="col">Nome</th>
-            <th scope="col">Apelido</th>
-            <th scope="col">Curso</th>
-            <th scope="col">Ano</th>
-            <th scope="col">Idade</th>
+            <th scope="col" data-campo="nome" aria-sort="ascending">
+              <button type="button" class="sort-button">Nome</button>
+            </th>
+            <th scope="col" data-campo="apelido" aria-sort="none">
+              <button type="button" class="sort-button">Apelido</button>
+            </th>
+            <th scope="col" data-campo="curso" aria-sort="none">
+              <button type="button" class="sort-button">Curso</button>
+            </th>
+            <th scope="col" data-campo="anoCurricular" aria-sort="none">
+              <button type="button" class="sort-button">Ano</button>
+            </th>
+            <th scope="col" data-campo="idade" aria-sort="none">
+              <button type="button" class="sort-button">Idade</button>
+            </th>
             <th scope="col">Ações</th>
           </tr>
         </thead>
@@ -65,27 +67,27 @@
     </div>
   </main>
 
-  <dialog id="dialogo-edicao" aria-labelledby="titulo-edicao">
-    <form id="form-edicao">
-      <h2 id="titulo-edicao">Editar aluno</h2>
+  <dialog id="dialogo-aluno" aria-labelledby="titulo-aluno">
+    <form id="form-aluno">
+      <h2 id="titulo-aluno">Novo aluno</h2>
       <div class="fields">
         <label>
           Nome
-          <input id="editar-nome" type="text" required minlength="2" maxlength="60" autocomplete="given-name" />
+          <input id="aluno-nome" type="text" required minlength="2" maxlength="60" autocomplete="given-name" />
         </label>
         <label>
           Apelido
-          <input id="editar-apelido" type="text" required minlength="2" maxlength="60" autocomplete="family-name" />
+          <input id="aluno-apelido" type="text" required minlength="2" maxlength="60" autocomplete="family-name" />
         </label>
         <label>
           Curso
-          <select id="editar-curso" required>
+          <select id="aluno-curso" required>
             <option value="">Selecionar…</option>
           </select>
         </label>
         <label>
           Ano curricular
-          <select id="editar-ano" required>
+          <select id="aluno-ano" required>
             <option value="">Selecionar…</option>
             <option value="1">1.º ano</option>
             <option value="2">2.º ano</option>
@@ -94,13 +96,13 @@
         </label>
         <label>
           Idade
-          <input id="editar-idade" type="number" min="0" max="120" />
+          <input id="aluno-idade" type="number" min="0" max="120" />
         </label>
       </div>
-      <p id="erro-edicao" role="alert" hidden></p>
+      <p id="erro-aluno" role="alert" hidden></p>
       <div class="actions">
-        <button type="submit" id="atualizar">Atualizar</button>
-        <button type="button" id="cancelar-edicao">Cancelar</button>
+        <button type="submit" id="guardar-aluno">Adicionar</button>
+        <button type="button" id="cancelar-aluno">Cancelar</button>
       </div>
     </form>
   </dialog>

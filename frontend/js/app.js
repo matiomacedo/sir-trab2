@@ -2,28 +2,33 @@ const API = ['localhost', '127.0.0.1'].includes(location.hostname)
   ? ''
   : 'https://sir-api-fn74.onrender.com';
 
-const form = document.getElementById('aluno-form');
-const inputNome = document.getElementById('nome');
-const inputApelido = document.getElementById('apelido');
-const inputCurso = document.getElementById('curso');
-const inputAno = document.getElementById('ano');
-const inputIdade = document.getElementById('idade');
+const dialogoAluno = document.getElementById('dialogo-aluno');
+const formAluno = document.getElementById('form-aluno');
+const tituloAluno = document.getElementById('titulo-aluno');
+const erroAluno = document.getElementById('erro-aluno');
+const campoNome = document.getElementById('aluno-nome');
+const campoApelido = document.getElementById('aluno-apelido');
+const campoCurso = document.getElementById('aluno-curso');
+const campoAno = document.getElementById('aluno-ano');
+const campoIdade = document.getElementById('aluno-idade');
+const botaoGuardar = document.getElementById('guardar-aluno');
+const botaoCancelar = document.getElementById('cancelar-aluno');
+const botaoNovo = document.getElementById('novo-aluno');
+
+const filtroCurso = document.getElementById('filtro-curso');
+const filtroAno = document.getElementById('filtro-ano');
+const filtroTexto = document.getElementById('filtro-texto');
+const botaoLimparFiltros = document.getElementById('limpar-filtros');
+const contagem = document.getElementById('contagem');
+
+const thead = document.querySelector('thead');
 const tbody = document.getElementById('alunos');
 const mensagem = document.getElementById('mensagem');
 
-const dialogoEdicao = document.getElementById('dialogo-edicao');
-const formEdicao = document.getElementById('form-edicao');
-const erroEdicao = document.getElementById('erro-edicao');
-const editarNome = document.getElementById('editar-nome');
-const editarApelido = document.getElementById('editar-apelido');
-const editarCurso = document.getElementById('editar-curso');
-const editarAno = document.getElementById('editar-ano');
-const editarIdade = document.getElementById('editar-idade');
-const cancelarEdicao = document.getElementById('cancelar-edicao');
-
 let cursos = [];
 let alunos = [];
-let edicaoId = null;
+let idEdicao = null;
+let ordenacao = { campo: 'nome', direcao: 'asc' };
 
 async function pedir(url, options = {}) {
   const init = { ...options };
@@ -38,14 +43,18 @@ function mostrarErro(erro) {
   mensagem.hidden = false;
 }
 
+function normalizar(texto) {
+  return texto.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
+}
+
 function nomeCurso(idCurso) {
   const curso = cursos.find((c) => String(c.id) === String(idCurso));
   return curso ? curso.nomeDoCurso : '—';
 }
 
-function preencherSelect(select) {
+function preencherSelect(select, textoInicial) {
   const selecionado = select.value;
-  select.innerHTML = '<option value="">Selecionar…</option>';
+  select.innerHTML = '<option value="">' + textoInicial + '</option>';
   for (const curso of cursos) {
     const opcao = document.createElement('option');
     opcao.value = curso.id;
@@ -56,8 +65,8 @@ function preencherSelect(select) {
 }
 
 function preencherCursos() {
-  preencherSelect(inputCurso);
-  preencherSelect(editarCurso);
+  preencherSelect(filtroCurso, 'Todos');
+  preencherSelect(campoCurso, 'Selecionar…');
 }
 
 function criarBotao(texto, acao, id) {
@@ -69,19 +78,52 @@ function criarBotao(texto, acao, id) {
   return botao;
 }
 
+function alunosVisiveis() {
+  const texto = normalizar(filtroTexto.value.trim());
+  const visiveis = alunos.filter((aluno) => {
+    if (filtroCurso.value && String(aluno.idCurso) !== filtroCurso.value) return false;
+    if (filtroAno.value && String(aluno.anoCurricular) !== filtroAno.value) return false;
+    if (!texto) return true;
+    return normalizar(aluno.nome + ' ' + aluno.apelido).includes(texto);
+  });
+
+  const fator = ordenacao.direcao === 'asc' ? 1 : -1;
+  return visiveis.sort((a, b) => {
+    let comparacao;
+    if (ordenacao.campo === 'curso') {
+      comparacao = nomeCurso(a.idCurso).localeCompare(nomeCurso(b.idCurso), 'pt');
+    } else if (ordenacao.campo === 'anoCurricular') {
+      comparacao = a.anoCurricular - b.anoCurricular;
+    } else if (ordenacao.campo === 'idade') {
+      comparacao = (a.idade ?? -1) - (b.idade ?? -1);
+    } else {
+      comparacao = String(a[ordenacao.campo]).localeCompare(String(b[ordenacao.campo]), 'pt');
+    }
+    return comparacao * fator;
+  });
+}
+
 function desenharAlunos() {
+  const visiveis = alunosVisiveis();
   tbody.innerHTML = '';
-  if (!alunos.length) {
+
+  contagem.textContent = visiveis.length === alunos.length
+    ? alunos.length + ' alunos'
+    : visiveis.length + ' de ' + alunos.length + ' alunos';
+
+  if (!visiveis.length) {
     const linha = document.createElement('tr');
     const celula = document.createElement('td');
     celula.colSpan = 6;
-    celula.textContent = 'Nenhum aluno registado.';
+    celula.textContent = alunos.length
+      ? 'Nenhum aluno corresponde aos filtros.'
+      : 'Nenhum aluno registado.';
     linha.appendChild(celula);
     tbody.appendChild(linha);
     return;
   }
 
-  for (const aluno of alunos) {
+  for (const aluno of visiveis) {
     const linha = document.createElement('tr');
     const valores = [aluno.nome, aluno.apelido, nomeCurso(aluno.idCurso), aluno.anoCurricular + '.º', aluno.idade ?? '—'];
     for (const valor of valores) {
@@ -97,6 +139,16 @@ function desenharAlunos() {
   }
 }
 
+function atualizarOrdenacao() {
+  for (const th of thead.querySelectorAll('th[data-campo]')) {
+    if (th.dataset.campo === ordenacao.campo) {
+      th.setAttribute('aria-sort', ordenacao.direcao === 'asc' ? 'ascending' : 'descending');
+    } else {
+      th.setAttribute('aria-sort', 'none');
+    }
+  }
+}
+
 async function carregar() {
   mensagem.hidden = true;
   try {
@@ -108,18 +160,25 @@ async function carregar() {
   }
 }
 
-function editar(id) {
-  const aluno = alunos.find((a) => String(a.id) === String(id));
-  if (!aluno) return;
+function abrirModal(aluno = null) {
+  idEdicao = aluno ? aluno.id : null;
 
-  edicaoId = aluno.id;
-  editarNome.value = aluno.nome;
-  editarApelido.value = aluno.apelido;
-  editarCurso.value = aluno.idCurso;
-  editarAno.value = aluno.anoCurricular;
-  editarIdade.value = aluno.idade ?? '';
-  erroEdicao.hidden = true;
-  dialogoEdicao.showModal();
+  if (aluno) {
+    campoNome.value = aluno.nome;
+    campoApelido.value = aluno.apelido;
+    campoCurso.value = aluno.idCurso;
+    campoAno.value = aluno.anoCurricular;
+    campoIdade.value = aluno.idade ?? '';
+    tituloAluno.textContent = 'Editar aluno';
+    botaoGuardar.textContent = 'Guardar';
+  } else {
+    formAluno.reset();
+    tituloAluno.textContent = 'Novo aluno';
+    botaoGuardar.textContent = 'Adicionar';
+  }
+
+  erroAluno.hidden = true;
+  dialogoAluno.showModal();
 }
 
 async function apagar(id) {
@@ -146,51 +205,71 @@ function lerPayload(nome, apelido, curso, ano, idade) {
   return payload;
 }
 
-form.addEventListener('submit', async (event) => {
+formAluno.addEventListener('submit', async (event) => {
   event.preventDefault();
-  const payload = lerPayload(inputNome, inputApelido, inputCurso, inputAno, inputIdade);
+  const payload = lerPayload(campoNome, campoApelido, campoCurso, campoAno, campoIdade);
 
   try {
-    await pedir('/alunos', { method: 'POST', body: JSON.stringify(payload) });
-    form.reset();
+    if (idEdicao !== null) {
+      await pedir('/alunos/' + encodeURIComponent(idEdicao), { method: 'PUT', body: JSON.stringify(payload) });
+    } else {
+      await pedir('/alunos', { method: 'POST', body: JSON.stringify(payload) });
+    }
+    dialogoAluno.close();
     await carregar();
   } catch (erro) {
-    mostrarErro(erro);
+    erroAluno.textContent = erro.message;
+    erroAluno.hidden = false;
   }
 });
 
-formEdicao.addEventListener('submit', async (event) => {
-  event.preventDefault();
-  if (edicaoId === null) return;
+dialogoAluno.addEventListener('close', () => {
+  idEdicao = null;
+  formAluno.reset();
+});
 
-  const payload = lerPayload(editarNome, editarApelido, editarCurso, editarAno, editarIdade);
+dialogoAluno.addEventListener('click', (event) => {
+  if (event.target === dialogoAluno) dialogoAluno.close();
+});
 
-  try {
-    await pedir('/alunos/' + encodeURIComponent(edicaoId), { method: 'PUT', body: JSON.stringify(payload) });
-    dialogoEdicao.close();
-    await carregar();
-  } catch (erro) {
-    erroEdicao.textContent = erro.message;
-    erroEdicao.hidden = false;
+botaoCancelar.addEventListener('click', () => dialogoAluno.close());
+botaoNovo.addEventListener('click', () => abrirModal());
+
+filtroCurso.addEventListener('change', desenharAlunos);
+filtroAno.addEventListener('change', desenharAlunos);
+filtroTexto.addEventListener('input', desenharAlunos);
+
+botaoLimparFiltros.addEventListener('click', () => {
+  filtroCurso.value = '';
+  filtroAno.value = '';
+  filtroTexto.value = '';
+  desenharAlunos();
+});
+
+thead.addEventListener('click', (event) => {
+  const th = event.target.closest('th[data-campo]');
+  if (!th) return;
+
+  const campo = th.dataset.campo;
+  if (ordenacao.campo === campo) {
+    ordenacao.direcao = ordenacao.direcao === 'asc' ? 'desc' : 'asc';
+  } else {
+    ordenacao = { campo, direcao: 'asc' };
   }
-});
 
-dialogoEdicao.addEventListener('close', () => {
-  edicaoId = null;
-  formEdicao.reset();
+  atualizarOrdenacao();
+  desenharAlunos();
 });
-
-dialogoEdicao.addEventListener('click', (event) => {
-  if (event.target === dialogoEdicao) dialogoEdicao.close();
-});
-
-cancelarEdicao.addEventListener('click', () => dialogoEdicao.close());
 
 tbody.addEventListener('click', (event) => {
   const botao = event.target.closest('button');
   if (!botao) return;
-  if (botao.dataset.acao === 'editar') editar(botao.dataset.id);
+  if (botao.dataset.acao === 'editar') {
+    const aluno = alunos.find((a) => String(a.id) === String(botao.dataset.id));
+    if (aluno) abrirModal(aluno);
+  }
   if (botao.dataset.acao === 'apagar') apagar(botao.dataset.id);
 });
 
+atualizarOrdenacao();
 carregar();
