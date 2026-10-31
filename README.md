@@ -9,6 +9,8 @@ mock-data/      Base de dados JSON
 mock-server/    JSON Server e coleção Postman
 frontend/       Interface web
 backend/        API RESTful com Express e Mongoose
+backend/docs/   Especificação OpenAPI
+render.yaml     Blueprint do Render
 ```
 
 ## Parte 3 — Frontend com JSON Server
@@ -28,10 +30,9 @@ O JSON Server serve a pasta `frontend/` e a API ao mesmo tempo. A interface perm
 ### Atlas
 
 1. Criar um cluster e uma base de dados chamada `sir`.
-2. Criar as coleções `alunos` e `cursos`.
-3. Criar um utilizador com permissão de leitura e escrita na base de dados.
-4. Em Network Access, permitir `0.0.0.0/0`.
-5. Copiar a connection string para `backend/.env`.
+2. Criar um utilizador com permissão de leitura e escrita na base de dados.
+3. Em Network Access, permitir `0.0.0.0/0`.
+4. Copiar a connection string para `backend/.env`.
 
 ### Configuração
 
@@ -56,7 +57,7 @@ O ficheiro `.env` não é enviado para o repositório.
 npm run seed
 ```
 
-O seed limpa as coleções `alunos` e `cursos` e importa os dados de `mock-data/bd.json`.
+O seed cria as coleções `alunos` e `cursos`, limpa-as e importa os dados de `mock-data/bd.json`.
 
 ### Executar
 
@@ -68,7 +69,7 @@ A API fica disponível em <http://localhost:3000>. O frontend local é servido p
 
 > O JSON Server e a API usam a mesma porta. Executar apenas um de cada vez.
 
-## Endpoints
+### Endpoints
 
 | Método | Rota | Descrição |
 |---|---|---|
@@ -81,22 +82,11 @@ A API fica disponível em <http://localhost:3000>. O frontend local é servido p
 | GET | `/cursos` | Listar cursos |
 | GET | `/cursos/:id` | Obter um curso |
 
-## Documentação da API
-
-A especificação OpenAPI está em `backend/docs/openapi.json` e é servida pelo Swagger UI em `/api-docs`.
-
-- Local: <http://localhost:3000/api-docs>
-- Público: <https://sir-api-fn74.onrender.com/api-docs>
-
-## Coleção Postman
-
-A coleção da Parte 2 está em `mock-server/tests/Collection.postman_collection.json`.
-
-## Deploy
+## Parte 5 — Deploy
 
 ### API no Render
 
-O repositório inclui `render.yaml`, que pode ser usado com Render Blueprints. Nesse caso, indicar `MONGODB_URI` quando for pedido.
+O repositório inclui `render.yaml`, que pode ser usado com Render Blueprints. O blueprint define o serviço com o nome `sir-api`; o Render pode acrescentar um sufixo ao subdomínio público. Nesse caso, indicar `MONGODB_URI` quando for pedido.
 
 Alternativamente, criar manualmente um Web Service:
 
@@ -120,3 +110,16 @@ O endereço da API usado pelo frontend está definido no início de `frontend/js
 
 - Frontend: <https://sir-trab2-frontend.vercel.app>
 - API: <https://sir-api-fn74.onrender.com>
+
+O Render gratuito suspende o serviço após inatividade; o primeiro pedido pode demorar 30 a 60 segundos.
+
+## Parte 6 — Documentação da API
+
+A especificação OpenAPI está em `backend/docs/openapi.json` e é servida pelo Swagger UI em `/api-docs`.
+
+- Local: <http://localhost:3000/api-docs>
+- Público: <https://sir-api-fn74.onrender.com/api-docs>
+
+## Coleção Postman
+
+A coleção da Parte 2 está em `mock-server/tests/Collection.postman_collection.json`.
