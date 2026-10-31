@@ -1,0 +1,398 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "API de Gestão de Alunos",
+    "version": "1.0.0",
+    "description": "API RESTful para consulta de cursos e gestão de alunos, implementada com Express e MongoDB Atlas."
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": "Servidor atual"
+    },
+    {
+      "url": "https://sir-api-fn74.onrender.com",
+      "description": "Produção (Render)"
+    },
+    {
+      "url": "http://localhost:3000",
+      "description": "Desenvolvimento local"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Alunos",
+      "description": "Operações sobre alunos."
+    },
+    {
+      "name": "Cursos",
+      "description": "Consulta de cursos. Apenas leitura."
+    }
+  ],
+  "paths": {
+    "/alunos": {
+      "get": {
+        "tags": ["Alunos"],
+        "summary": "Listar alunos",
+        "description": "Devolve todos os alunos. Pode ser filtrado por curso através do parâmetro `idCurso`.",
+        "parameters": [
+          {
+            "name": "idCurso",
+            "in": "query",
+            "required": false,
+            "description": "Identificador do curso pelo qual filtrar.",
+            "schema": {
+              "type": "string",
+              "example": "6addf88def3b8cbeb73340d2"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de alunos.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Aluno" }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/ErroPedido" },
+          "500": { "$ref": "#/components/responses/ErroInterno" }
+        }
+      },
+      "post": {
+        "tags": ["Alunos"],
+        "summary": "Criar aluno",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AlunoInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Aluno criado.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Aluno" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/ErroPedido" },
+          "500": { "$ref": "#/components/responses/ErroInterno" }
+        }
+      }
+    },
+    "/alunos/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ObjectId do aluno.",
+          "schema": {
+            "type": "string",
+            "example": "6addf88def3b8cbeb73340dc"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["Alunos"],
+        "summary": "Obter aluno",
+        "responses": {
+          "200": {
+            "description": "Aluno encontrado.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Aluno" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/ErroPedido" },
+          "404": { "$ref": "#/components/responses/AlunoNaoEncontrado" },
+          "500": { "$ref": "#/components/responses/ErroInterno" }
+        }
+      },
+      "put": {
+        "tags": ["Alunos"],
+        "summary": "Substituir aluno",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AlunoInput" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Aluno atualizado.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Aluno" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/ErroPedido" },
+          "404": { "$ref": "#/components/responses/AlunoNaoEncontrado" },
+          "500": { "$ref": "#/components/responses/ErroInterno" }
+        }
+      },
+      "patch": {
+        "tags": ["Alunos"],
+        "summary": "Atualizar aluno parcialmente",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AlunoUpdate" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Aluno atualizado.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Aluno" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/ErroPedido" },
+          "404": { "$ref": "#/components/responses/AlunoNaoEncontrado" },
+          "500": { "$ref": "#/components/responses/ErroInterno" }
+        }
+      },
+      "delete": {
+        "tags": ["Alunos"],
+        "summary": "Apagar aluno",
+        "responses": {
+          "204": {
+            "description": "Aluno apagado. Sem corpo de resposta."
+          },
+          "400": { "$ref": "#/components/responses/ErroPedido" },
+          "404": { "$ref": "#/components/responses/AlunoNaoEncontrado" },
+          "500": { "$ref": "#/components/responses/ErroInterno" }
+        }
+      }
+    },
+    "/cursos": {
+      "get": {
+        "tags": ["Cursos"],
+        "summary": "Listar cursos",
+        "responses": {
+          "200": {
+            "description": "Lista de cursos.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Curso" }
+                }
+              }
+            }
+          },
+          "500": { "$ref": "#/components/responses/ErroInterno" }
+        }
+      }
+    },
+    "/cursos/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ObjectId do curso.",
+          "schema": {
+            "type": "string",
+            "example": "6addf88def3b8cbeb73340d2"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["Cursos"],
+        "summary": "Obter curso",
+        "responses": {
+          "200": {
+            "description": "Curso encontrado.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Curso" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/ErroPedido" },
+          "404": {
+            "description": "Curso não encontrado.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": "Curso não encontrado." }
+              }
+            }
+          },
+          "500": { "$ref": "#/components/responses/ErroInterno" }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Aluno": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ObjectId do aluno.",
+            "example": "6addf88def3b8cbeb73340dc"
+          },
+          "nome": {
+            "type": "string",
+            "example": "Joana"
+          },
+          "apelido": {
+            "type": "string",
+            "example": "Silva"
+          },
+          "idCurso": {
+            "type": "string",
+            "description": "ObjectId do curso frequentado.",
+            "example": "6addf88def3b8cbeb73340d3"
+          },
+          "anoCurricular": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3,
+            "example": 2
+          },
+          "idade": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 120,
+            "example": 21
+          }
+        },
+        "required": ["id", "nome", "apelido", "idCurso", "anoCurricular"]
+      },
+      "AlunoInput": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "example": "Joana"
+          },
+          "apelido": {
+            "type": "string",
+            "example": "Silva"
+          },
+          "idCurso": {
+            "type": "string",
+            "example": "6addf88def3b8cbeb73340d3"
+          },
+          "anoCurricular": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3,
+            "example": 2
+          },
+          "idade": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 120,
+            "example": 21
+          }
+        },
+        "required": ["nome", "apelido", "idCurso", "anoCurricular"]
+      },
+      "AlunoUpdate": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "example": "Joana"
+          },
+          "apelido": {
+            "type": "string",
+            "example": "Silva"
+          },
+          "idCurso": {
+            "type": "string",
+            "example": "6addf88def3b8cbeb73340d3"
+          },
+          "anoCurricular": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3,
+            "example": 2
+          },
+          "idade": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 120,
+            "example": 21
+          }
+        }
+      },
+      "Curso": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ObjectId do curso.",
+            "example": "6addf88def3b8cbeb73340d2"
+          },
+          "nomeDoCurso": {
+            "type": "string",
+            "example": "Engenharia da Computação Gráfica e Multimédia"
+          }
+        },
+        "required": ["id", "nomeDoCurso"]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Mensagem de erro.",
+            "example": "Aluno não encontrado."
+          }
+        },
+        "required": ["error"]
+      }
+    },
+    "responses": {
+      "ErroPedido": {
+        "description": "Pedido inválido (validação ou ObjectId mal formado).",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": "Aluno validation failed: nome: Path `nome` is required." }
+          }
+        }
+      },
+      "AlunoNaoEncontrado": {
+        "description": "Aluno não encontrado.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": "Aluno não encontrado." }
+          }
+        }
+      },
+      "ErroInterno": {
+        "description": "Erro interno do servidor.",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": "Erro interno do servidor." }
+          }
+        }
+      }
+    }
+  }
+}

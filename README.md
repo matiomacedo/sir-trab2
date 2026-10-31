@@ -81,6 +81,13 @@ A API fica disponível em <http://localhost:3000>. O frontend local é servido p
 | GET | `/cursos` | Listar cursos |
 | GET | `/cursos/:id` | Obter um curso |
 
+## Documentação da API
+
+A especificação OpenAPI está em `backend/docs/openapi.json` e é servida pelo Swagger UI em `/api-docs`.
+
+- Local: <http://localhost:3000/api-docs>
+- Público: <https://sir-api-fn74.onrender.com/api-docs>
+
 ## Coleção Postman
 
 A coleção da Parte 2 está em `mock-server/tests/Collection.postman_collection.json`.
@@ -91,12 +98,13 @@ A coleção da Parte 2 está em `mock-server/tests/Collection.postman_collection
 
 O repositório inclui `render.yaml`, que pode ser usado com Render Blueprints. Nesse caso, indicar `MONGODB_URI` quando for pedido.
 
-Alternativamente, criar manualmente um Web Service ligado a este repositório.
-2. Root Directory: `backend`.
-3. Build Command: `npm install`.
-4. Start Command: `npm start`.
-5. Adicionar a variável de ambiente `MONGODB_URI` com a connection string do Atlas.
-6. Não definir `PORT`; o Render fornece essa variável.
+Alternativamente, criar manualmente um Web Service:
+
+1. Root Directory: `backend`.
+2. Build Command: `npm install`.
+3. Start Command: `npm start`.
+4. Adicionar a variável de ambiente `MONGODB_URI` com a connection string do Atlas.
+5. Não definir `PORT`; o Render fornece essa variável.
 
 ### Frontend no Vercel
 
