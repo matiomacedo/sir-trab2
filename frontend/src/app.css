@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --color-bg: #f6f7f9;
+  --color-surface: #ffffff;
+  --color-text: #1a2332;
+  --color-muted: #5b6b82;
+  --color-border: #dfe5ec;
+  --color-primary: #1d4ed8;
+  --color-primary-hover: #1e40af;
+  --color-secondary: #eef2f7;
+  --color-secondary-hover: #e2e8f0;
+  --color-danger: #b91c1c;
+  --color-danger-hover: #991b1b;
+}
+
+@layer base {
+  body {
+    @apply bg-bg text-text;
+  }
+
+  body:has(dialog[open]) {
+    @apply overflow-hidden;
+  }
+
+  input:focus-visible,
+  select:focus-visible,
+  button:focus-visible {
+    @apply outline-2 outline-offset-1 outline-primary;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply cursor-pointer rounded-md border px-[0.85rem] py-[0.45rem];
+  }
+
+  .btn-primary {
+    @apply border-primary bg-primary text-white hover:bg-primary-hover;
+  }
+
+  .btn-secondary {
+    @apply border-border bg-secondary text-text hover:bg-secondary-hover;
+  }
+
+  .btn-danger {
+    @apply border-danger bg-danger text-white hover:bg-danger-hover;
+  }
+
+  .btn-sm {
+    @apply px-[0.55rem] py-1 text-[0.85rem];
+  }
+
+  .rotulo {
+    @apply flex flex-col gap-1 text-sm text-muted;
+  }
+
+  .campo {
+    @apply min-w-0 rounded-md border border-border bg-surface px-[0.6rem] py-2 text-text;
+  }
+
+  .celula {
+    @apply border-b border-border px-[0.7rem] py-[0.6rem] text-left;
+  }
+}
