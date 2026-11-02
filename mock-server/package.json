@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "json-server --watch ../mock-data/bd.json --static ../frontend --port 3000"
+    "start": "json-server --watch ../mock-data/bd.json --static ../frontend/dist --port 3000"
   },
   "devDependencies": {
     "json-server": "^0.17.4"

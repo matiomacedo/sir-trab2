@@ -1,6 +1,6 @@
 # SIR — Atividade Prática #1
 
-Aplicação de gestão de alunos com frontend em HTML/CSS/JavaScript, API simulada com JSON Server e API real em Node.js + Express + MongoDB Atlas.
+Aplicação de gestão de alunos com frontend em Svelte 5 e Tailwind CSS, API simulada com JSON Server e API real em Node.js + Express + MongoDB Atlas.
 
 ## Estrutura
 
@@ -15,15 +15,20 @@ render.yaml     Blueprint do Render
 
 ## Parte 3 — Frontend com JSON Server
 
+É preciso compilar o frontend antes de iniciar o JSON Server:
+
 ```bash
-cd mock-server
+cd frontend
+npm install
+npm run build
+cd ../mock-server
 npm install
 npm start
 ```
 
 Abrir <http://localhost:3000>.
 
-O JSON Server serve a pasta `frontend/` e a API ao mesmo tempo. A interface permite listar, filtrar, ordenar, adicionar, editar e apagar alunos, usando `fetch` com pedidos assíncronos.
+O JSON Server serve a pasta `frontend/dist/` e a API ao mesmo tempo. Depois de alterar o frontend, voltar a executar `npm run build`. Em alternativa, com o JSON Server a correr, `npm run dev` em `frontend/` abre a interface com recarregamento automático em <http://localhost:5173>. A interface permite listar, filtrar, ordenar, adicionar, editar e apagar alunos, usando `fetch` com pedidos assíncronos.
 
 ## Parte 4 — API com Express e MongoDB Atlas
 
@@ -100,11 +105,11 @@ Alternativamente, criar manualmente um Web Service:
 
 1. Importar este repositório no Vercel.
 2. Root Directory: `frontend`.
-3. Framework Preset: Other.
-4. Build Command: vazio.
-5. Output Directory: `.`.
+3. Framework Preset: Vite.
+4. Build Command: `npm run build`.
+5. Output Directory: `dist`.
 
-O endereço da API usado pelo frontend está definido no início de `frontend/js/app.js`.
+O endereço da API usado pelo frontend está definido no início de `frontend/src/App.svelte`.
 
 ### URLs públicas
 
